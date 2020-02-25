@@ -5,7 +5,6 @@ from torch.multiprocessing import Manager, Pipe, Process
 import gym
 
 from ssne import SSNE
-from ssne2 import SSNE2
 from genealogy import Genealogy
 from models.deterministic_policy import DeterministicPolicy
 from rollout_worker import rollout_worker
@@ -23,6 +22,8 @@ class EALearner:
             self,
             env_name,
             hidden_sizes=None,
+            activation='ReLU',
+            layernorm=True,
             pop_size=10,
             elite_fraction=0.2,
             cross_prob=0.01,
@@ -49,7 +50,6 @@ class EALearner:
             'reset_prob': reset_prob,
         }
         self.EA = SSNE(**ea_kwargs)
-        # self.EA = SSNE2(None)
 
         self.manager = Manager()
         self.genealogy = Genealogy()
@@ -62,9 +62,9 @@ class EALearner:
         self.population = self.manager.list()
         for i in range(pop_size):
             wwid = self.genealogy.new_id('EA_{}'.format(i))
-            policy = DeterministicPolicy(state_dim, action_dim, hidden_sizes, wwid).eval()
+            policy = DeterministicPolicy(state_dim, action_dim, hidden_sizes, wwid, activation, layernorm).eval()
             self.population.append(policy)
-        self.best_policy = DeterministicPolicy(state_dim, action_dim, hidden_sizes, -1).eval()
+        self.best_policy = DeterministicPolicy(state_dim, action_dim, hidden_sizes, -1, activation, layernorm).eval()
 
         # Evolutionary population Rollout workers
         self.evo_task_pipes = []
@@ -82,7 +82,7 @@ class EALearner:
 
         # test bucket
         self.test_bucket = self.manager.list()
-        policy = DeterministicPolicy(state_dim, action_dim, hidden_sizes, -1).eval()
+        policy = DeterministicPolicy(state_dim, action_dim, hidden_sizes, -1, activation, layernorm).eval()
         self.test_bucket.append(policy)
         self.test_task_pipes = []
         self.test_result_pipes = []
@@ -143,8 +143,6 @@ class EALearner:
 
         # EA step
         self.EA.epoch(gen, self.genealogy, self.population, pop_fitness.tolist())
-
-        # allocate learners' rollout according to ucb score
 
         champ_wwid = int(self.population[champ_index].wwid.item())
 

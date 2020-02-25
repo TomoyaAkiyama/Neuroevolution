@@ -25,6 +25,7 @@ def main(env_name, seed, args):
         parent_dir,
         'results',
         env_name,
+        args['activation'] + ('_LayerNorm' if args['layernorm'] else ''),
         'seed{}'.format(seed)
     )
     logger = Logger(save_dir)
@@ -62,7 +63,7 @@ def main(env_name, seed, args):
                 break
         logger.save()
         for i, individual in enumerate(agent.population):
-            model_dir = os.path.join(save_dir, 'learned_model', 'Population')
+            model_dir = os.path.join(save_dir, 'learned_model')
             os.makedirs(model_dir, exist_ok=True)
             torch.save(individual.state_dict(), os.path.join(model_dir, 'individual{}.pth'.format(i)))
 
@@ -78,18 +79,20 @@ def main(env_name, seed, args):
 if __name__ == '__main__':
     args = {
         'hidden_sizes': [400, 300],
+        'activation': 'ELU',
+        'layernorm': True,
         'pop_size': 10,
-        'elite_fraction': 0.1,
-        'cross_prob': 0.0,
+        'elite_fraction': 0.2,
+        'cross_prob': 0.01,
         'cross_fraction': 0.3,
         'bias_cross_prob': 0.2,
-        'mutation_prob': 0.9,
-        'mut_strength': 0.1,
-        'mut_fraction': 0.1,
-        'super_mut_prob': 0.05,
-        'reset_prob': 0.1,
+        'mutation_prob': 0.2,
+        'mut_strength': 0.02,
+        'mut_fraction': 0.03,
+        'super_mut_prob': 0.1,
+        'reset_prob': 0.2,
     }
 
     env_name = 'Swimmer-v2'
-    seed = 1
-    main(env_name, seed, args)
+    for seed in range(1, 11):
+        main(env_name, seed, args)

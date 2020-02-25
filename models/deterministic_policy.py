@@ -11,13 +11,14 @@ class DeterministicPolicy(nn.Module):
             action_dim,
             hidden_sizes,
             wwid,
-            activation='ReLU'
+            activation='ELU',
+            layernorm=True
     ):
         super(DeterministicPolicy, self).__init__()
 
         self.wwid = torch.tensor([wwid])
 
-        layers = create_hidden_layers(state_dim, hidden_sizes, activation)
+        layers = create_hidden_layers(state_dim, hidden_sizes, activation, layernorm)
         layers.append(nn.Linear(hidden_sizes[-1], action_dim))
         layers.append(nn.Tanh())
         self.actor = nn.Sequential(*layers)
