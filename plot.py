@@ -71,13 +71,13 @@ def plot_average_test_scores(activation, layernorm, env_name, seeds, x_min, x_ma
 if __name__ == '__main__':
     env_name = 'Swimmer-v2'
     activation = 'ELU'
-    layernorm = True
+    layernorm = False
     seeds = range(1, 11)
 
     x_min = 0
     x_max = 1000000
-    y_min = -20
-    y_max = 300
+    y_min = 0
+    y_max = 380
 
     for seed in seeds:
         plot_test_scores(activation, layernorm, env_name, seed, x_min, x_max, y_min, y_max)
