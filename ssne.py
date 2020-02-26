@@ -111,7 +111,7 @@ class SSNE:
                         random_num = np.random.rand()
 
                         if random_num < self.super_mut_prob:
-                            w[ind_dim1, ind_dim2] += np.random.normal(0, abs(50 * self.mut_strength * w[ind_dim1, ind_dim2]))
+                            w[ind_dim1, ind_dim2] += np.random.normal(0, abs(100 * self.mut_strength * w[ind_dim1, ind_dim2]))
                         elif random_num < self.reset_prob:
                             w[ind_dim1, ind_dim2] = np.random.normal(0, 0.1)
                         else:

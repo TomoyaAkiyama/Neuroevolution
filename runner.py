@@ -83,14 +83,14 @@ if __name__ == '__main__':
         'layernorm': True,
         'pop_size': 10,
         'elite_fraction': 0.2,
-        'cross_prob': 0.01,
+        'cross_prob': 0.0,
         'cross_fraction': 0.3,
         'bias_cross_prob': 0.2,
-        'mutation_prob': 0.2,
-        'mut_strength': 0.02,
-        'mut_fraction': 0.03,
-        'super_mut_prob': 0.1,
-        'reset_prob': 0.2,
+        'mutation_prob': 0.9,
+        'mut_strength': 0.1,
+        'mut_fraction': 0.1,
+        'super_mut_prob': 0.05,
+        'reset_prob': 0.1,
     }
 
     env_name = 'Swimmer-v2'
