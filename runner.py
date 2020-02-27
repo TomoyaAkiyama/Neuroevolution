@@ -79,8 +79,8 @@ def main(env_name, seed, args):
 if __name__ == '__main__':
     args = {
         'hidden_sizes': [400, 300],
-        'activation': 'ReLU',
-        'layernorm': True,
+        'activation': 'ELU',
+        'layernorm': False,
         'pop_size': 10,
         'elite_fraction': 0.2,
         'cross_prob': 0.0,
